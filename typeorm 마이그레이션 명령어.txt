@@ -1,0 +1,5 @@
+//마이그레이션 생성 명령어
+npm run typeorm:migration:generate -- src/migrations/alter -d src/config/typeorm.config.ts
+
+//마이그레이션 실행 명령어
+npm run typeorm:migration:run -- -d src/config/typeorm.config.ts
