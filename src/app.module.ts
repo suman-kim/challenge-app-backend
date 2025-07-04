@@ -5,6 +5,11 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './config/database.config';
 
+// Custom Modules
+import { PresentationModule } from './presentation/presentation.module';
+import { ApplicationModule } from './application/application.module';
+import { InfrastructureModule } from './infrastructure/infrastructure.module';
+
 /**
  * 애플리케이션 루트 모듈
  * - 모든 기능 모듈들을 통합
@@ -20,12 +25,10 @@ import { databaseConfig } from './config/database.config';
     }),
     // TypeORM 데이터베이스 연결 설정
     TypeOrmModule.forRoot(databaseConfig),
-    // 기능별 모듈 import
-    // AuthModule,      // 인증 관련 기능
-    // UserModule,      // 사용자 관련 기능
-    // ChallengeModule, // 챌린지 관련 기능
-    // PostModule,      // 포스트/피드 관련 기능
-    // RankingModule,   // 랭킹 관련 기능
+    // Custom Modules
+    PresentationModule,
+    ApplicationModule,
+    InfrastructureModule,
   ],
   controllers: [AppController],
   providers: [AppService],

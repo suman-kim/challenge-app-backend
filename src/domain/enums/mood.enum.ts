@@ -1,0 +1,20 @@
+/**
+ * 기분 열거형
+ * 체크인 시 사용자의 기분 상태를 정의
+ */
+export enum Mood {
+  EXCELLENT = 'EXCELLENT',
+  GOOD = 'GOOD',
+  NORMAL = 'NORMAL',
+  BAD = 'BAD',
+  TERRIBLE = 'TERRIBLE',
+  HAPPY = 'HAPPY',
+  SAD = 'SAD',
+  ANGRY = 'ANGRY',
+  FRUSTRATED = 'FRUSTRATED',
+  DISAPPOINTED = 'DISAPPOINTED',
+  EXCITED = 'EXCITED',
+  SURPRISED = 'SURPRISED',
+  CURIOUS = 'CURIOUS',
+  CONFUSED = 'CONFUSED',
+} 

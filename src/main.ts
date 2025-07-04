@@ -1,44 +1,76 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // NestJS 애플리케이션 생성
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const logger = new Logger('Bootstrap');
 
-
-  // 전역 검증 파이프 설정 - 모든 요청에 대해 DTO 검증 수행
+  // Global Validation Pipe 설정
   app.useGlobalPipes(new ValidationPipe({
-      transform: true, // 자동 타입 변환
-      whitelist: true, // DTO에 정의되지 않은 속성 제거
-      forbidNonWhitelisted: true, // 허용되지 않은 속성 발견 시 에러 발생
+    whitelist: true,        // DTO에 정의되지 않은 속성 제거
+    forbidNonWhitelisted: true, // 정의되지 않은 속성이 있으면 에러
+    transform: true,        // 자동 타입 변환
+    disableErrorMessages: configService.get('NODE_ENV') === 'production', // 프로덕션에서 에러 메시지 숨김
   }));
 
-  // 전역 응답 변환 인터셉터 설정 - 일관된 응답 형식 제공
-  //app.useGlobalInterceptors(new TransformInterceptor());
-
-  // CORS 설정 - 프론트엔드 애플리케이션과의 통신 허용
+  // CORS 설정
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: configService.get('FRONTEND_URL', 'http://localhost:3000'),
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
 
-  // Swagger API 문서 설정
-  const config = new DocumentBuilder()
-    .setTitle('30일 챌린지 앱 API')
-    .setDescription('30일 챌린지 앱의 백엔드 API 문서')
-    .setVersion('1.0')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'access-token'
-    )
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-  const port = process.env.PORT || 6666;
-  await app.listen(port);
+  // Global Prefix 설정
+  app.setGlobalPrefix('api/v1');
 
-  console.log(`🚀 애플리케이션이 포트 ${port}에서 실행 중입니다.`);
-  console.log(`📚 API 문서: http://localhost:${port}/api`);
+  // Swagger Documentation 설정 (개발 환경에서만)
+  if (configService.get('NODE_ENV') !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('30일 챌린지 앱 API')
+      .setDescription('30일 챌린지 앱의 백엔드 API 문서')
+      .setVersion('1.0')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'JWT',
+          description: 'JWT 토큰을 입력하세요',
+          in: 'header',
+        },
+        'access-token'
+      )
+      .build();
+    
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+    
+    logger.log('📚 Swagger documentation available at /api/docs');
+  }
+
+  // 애플리케이션 시작
+  const port = configService.get('PORT', 5000);
+  await app.listen(port);
+  
+  logger.log(`🚀 Application is running on: http://localhost:${port}`);
+  logger.log(`🌍 Environment: ${configService.get('NODE_ENV', 'development')}`);
+  logger.log(`📦 Database: ${configService.get('DB_NAME', 'challenge_app')}`);
 }
+// 전역 에러 핸들링
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
 bootstrap();
