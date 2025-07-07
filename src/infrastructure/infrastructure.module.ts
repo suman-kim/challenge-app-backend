@@ -10,6 +10,7 @@ import { UserRepository } from './repositories/user.repository';
 // Services
 import { PasswordService } from './services/password.service';
 import { BadgeService } from './services/badge.service';
+import { NotificationService } from './services/notification.service';
 import { RewardCalculatorService } from './services/reward-calculator.service';
 
 /**
@@ -29,7 +30,27 @@ import { RewardCalculatorService } from './services/reward-calculator.service';
       provide: 'IUserRepository',
       useClass: UserRepository,
     },
-    // 나중에 다른 저장소들 추가
+    // 임시로 주석 처리 - 구현체가 없는 저장소들
+    // {
+    //   provide: 'IChallengeRepository',
+    //   useClass: ChallengeRepository,
+    // },
+    // {
+    //   provide: 'IParticipationRepository',
+    //   useClass: ParticipationRepository,
+    // },
+    // {
+    //   provide: 'ICheckinRepository',
+    //   useClass: CheckinRepository,
+    // },
+    // {
+    //   provide: 'IPostRepository',
+    //   useClass: PostRepository,
+    // },
+    // {
+    //   provide: 'ICategoryRepository',
+    //   useClass: CategoryRepository,
+    // },
     
     // Service 구현체 등록
     {
@@ -39,6 +60,10 @@ import { RewardCalculatorService } from './services/reward-calculator.service';
     {
       provide: 'IBadgeService',
       useClass: BadgeService,
+    },
+    {
+      provide: 'INotificationService',
+      useClass: NotificationService,
     },
     {
       provide: 'IRewardCalculator',
@@ -51,6 +76,7 @@ import { RewardCalculatorService } from './services/reward-calculator.service';
     'IUserRepository',
     'IPasswordService',
     'IBadgeService',
+    'INotificationService',
     'IRewardCalculator',
   ],
 })

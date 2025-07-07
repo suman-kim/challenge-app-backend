@@ -21,7 +21,7 @@ export class UserRepository implements IUserRepository {
    * @param id 사용자 ID
    * @returns 사용자 도메인 엔티티 또는 null
    */
-  async findById(id: string): Promise<User | null> {
+  async findById(id: number): Promise<User | null> {
     const entity = await this.userRepo.findOne({ where: { id } });
     return entity ? entity.toDomain() : null;
   }
@@ -102,11 +102,12 @@ export class UserRepository implements IUserRepository {
    * @returns 점수 기준 상위 사용자 목록
    */
   async findTopUsers(limit: number): Promise<User[]> {
-    const entities = await this.userRepo.find({
-      order: { totalScore: 'DESC' },
-      take: limit,
-    });
-    return entities.map(entity => entity.toDomain());
+    // const entities = await this.userRepo.find({
+    //   order: { totalScore: 'DESC' },
+    //   take: limit,
+    // });
+    // return entities.map(entity => entity.toDomain());
+    return []; // 임시 반환
   }
 
   /**
@@ -115,15 +116,16 @@ export class UserRepository implements IUserRepository {
    * @returns 사용자의 전체 순위 (1위부터 시작)
    */
   async getUserRank(userId: number): Promise<number> {
-    const user = await this.userRepo.findOne({ where: { id: userId } });
-    if (!user) return 0;
+    // const user = await this.userRepo.findOne({ where: { id: userId } });
+    // if (!user) return 0;
 
-    // 해당 사용자보다 점수가 높은 사용자 수 계산
-    const rank = await this.userRepo
-      .createQueryBuilder()
-      .where('totalScore > :score', { score: user.totalScore })
-      .getCount();
+    // // 해당 사용자보다 점수가 높은 사용자 수 계산
+    // const rank = await this.userRepo
+    //   .createQueryBuilder()
+    //   .where('totalScore > :score', { score: user.totalScore })
+    //   .getCount();
 
-    return rank + 1; // 순위는 1부터 시작
+    // return rank + 1; // 순위는 1부터 시작
+    return 0; // 임시 반환
   }
 } 

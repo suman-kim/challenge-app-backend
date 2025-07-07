@@ -7,7 +7,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME || 'root',
   password: process.env.DB_PASSWORD || 'root',
   database: process.env.DB_NAME || 'challenge_app',
-  entities: ['src/domain/entities/*.entity.ts'], // 경로 수정
+  entities: ['src/infrastructure/database/typeorm/entities/*.typeorm-entity.ts'], // 경로 수정
   migrations: ['src/migrations/*.ts'],
   synchronize: false, // 마이그레이션 사용시 false
   logging: process.env.NODE_ENV === 'development',

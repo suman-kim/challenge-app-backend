@@ -1,3 +1,4 @@
+import { Injectable, Inject } from '@nestjs/common';
 import { IUserRepository } from '../../../domain/repositories/user-repository.interface';
 import { IPasswordService } from '../../../domain/services/password-service.interface';
 import { IBadgeService } from '../../../domain/services/badge-service.interface';
@@ -8,10 +9,14 @@ import { UserAlreadyExistsError } from '../../../domain/errors/user-already-exis
  * 사용자 생성 유스케이스
  * 회원가입 관련 비즈니스 흐름을 처리
  */
+@Injectable()
 export class CreateUserUseCase {
   constructor(
+    @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
+    @Inject('IPasswordService')
     private readonly passwordService: IPasswordService,
+    @Inject('IBadgeService')
     private readonly badgeService: IBadgeService,
   ) {}
 
@@ -39,7 +44,7 @@ export class CreateUserUseCase {
     const createdUser = await this.userRepository.save(user);
 
     // 4. 신규 가입자 뱃지 부여
-    await this.badgeService.checkAndAwardBadge(createdUser.id, 'FIRST_CHALLENGE' as any);
+    // await this.badgeService.checkAndAwardBadge(createdUser.id, 'FIRST_CHALLENGE' as any);
 
     return new CreateUserResponse(createdUser);
   }

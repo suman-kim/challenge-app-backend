@@ -1,11 +1,21 @@
 import { Controller, Post, Body, Get, UseGuards, Request, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse as SwaggerApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateUserUseCase, CreateUserRequest } from '../../application/use-cases/user/create-user.use-case';
 import { LoginUserUseCase, LoginUserRequest } from '../../application/use-cases/user/login-user.use-case';
+import { 
+  CreateUserDto, 
+  LoginDto, 
+  UserProfileDto, 
+  AuthResponseDto 
+} from '../../shared/dto/auth/auth.dto';
+import { ApiResponse } from '../../shared/interfaces/api-response.interface';
+import { JwtAuthGuard } from '../../shared/interfaces/jwt-auth.guard';
 
 /**
  * 인증 컨트롤러
  * 회원가입, 로그인 관련 HTTP 요청 처리
  */
+@ApiTags('인증 (Authentication)')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -19,6 +29,20 @@ export class AuthController {
    * @param body 회원가입 요청 데이터
    * @returns 생성된 사용자 정보 및 토큰
    */
+  @ApiOperation({ 
+    summary: '회원가입', 
+    description: '새로운 사용자 계정을 생성합니다.' 
+  })
+  @ApiBody({ type: CreateUserDto })
+  @SwaggerApiResponse({ 
+    status: 201, 
+    description: '회원가입 성공',
+    type: AuthResponseDto
+  })
+  @SwaggerApiResponse({ 
+    status: 400, 
+    description: '잘못된 요청 (이메일 중복 등)' 
+  })
   @Post('register')
   async register(@Body() body: CreateUserDto): Promise<ApiResponse<AuthResponseDto>> {
     try {
@@ -49,6 +73,20 @@ export class AuthController {
    * @param body 로그인 요청 데이터
    * @returns JWT 토큰 및 사용자 정보
    */
+  @ApiOperation({ 
+    summary: '로그인', 
+    description: '이메일과 비밀번호로 로그인하여 JWT 토큰을 발급받습니다.' 
+  })
+  @ApiBody({ type: LoginDto })
+  @SwaggerApiResponse({ 
+    status: 200, 
+    description: '로그인 성공',
+    type: AuthResponseDto
+  })
+  @SwaggerApiResponse({ 
+    status: 401, 
+    description: '인증 실패 (잘못된 이메일/비밀번호)' 
+  })
   @Post('login')
   async login(@Body() body: LoginDto): Promise<ApiResponse<AuthResponseDto>> {
     try {
@@ -80,6 +118,20 @@ export class AuthController {
    * @param req 인증된 요청 객체
    * @returns 현재 로그인한 사용자 정보
    */
+  @ApiOperation({ 
+    summary: '프로필 조회', 
+    description: '현재 로그인한 사용자의 프로필 정보를 조회합니다.' 
+  })
+  @ApiBearerAuth('access-token')
+  @SwaggerApiResponse({ 
+    status: 200, 
+    description: '프로필 조회 성공',
+    type: UserProfileDto
+  })
+  @SwaggerApiResponse({ 
+    status: 401, 
+    description: '인증되지 않은 사용자' 
+  })
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async getProfile(@Request() req): Promise<ApiResponse<UserProfileDto>> {
@@ -94,54 +146,5 @@ export class AuthController {
         createdAt: req.user.createdAt,
       },
     };
-  }
-}
-
-// DTO 클래스들
-export class CreateUserDto {
-  email: string;
-  username: string;
-  password: string;
-}
-
-export class LoginDto {
-  email: string;
-  password: string;
-}
-
-export class UserProfileDto {
-  id: string;
-  email: string;
-  username: string;
-  rank: string;
-  points: number;
-  createdAt: Date;
-}
-
-export class AuthResponseDto {
-  accessToken?: string;
-  user: {
-    id: string;
-    email: string;
-    username: string;
-    rank: string;
-    points: number;
-  };
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message?: string;
-  data?: T;
-  error?: string;
-  timestamp?: string;
-  path?: string;
-  responseTime?: string;
-}
-
-// 임시 JWT 가드 (나중에 구현)
-export class JwtAuthGuard {
-  canActivate() {
-    return true;
   }
 } 

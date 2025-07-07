@@ -1,3 +1,4 @@
+import { Injectable, Inject } from '@nestjs/common';
 import { IParticipationRepository } from '../../../domain/repositories/participation-repository.interface';
 import { ICheckinRepository } from '../../../domain/repositories/checkin-repository.interface';
 import { IUserRepository } from '../../../domain/repositories/user-repository.interface';
@@ -11,11 +12,16 @@ import { InactiveParticipationError } from '../../../domain/errors/inactive-part
 /**
  * 체크인 생성 유스케이스
  */
+@Injectable()
 export class CreateCheckinUseCase {
   constructor(
-    private readonly participationRepository: IParticipationRepository,
-    private readonly checkinRepository: ICheckinRepository,
-    private readonly userRepository: IUserRepository,
+    // @Inject('IParticipationRepository')
+    // private readonly participationRepository: IParticipationRepository,
+    // @Inject('ICheckinRepository')
+    // private readonly checkinRepository: ICheckinRepository,
+    // @Inject('IUserRepository')
+    // private readonly userRepository: IUserRepository,
+    @Inject('IBadgeService')
     private readonly badgeService: IBadgeService,
   ) {}
 
@@ -31,37 +37,38 @@ export class CreateCheckinUseCase {
    */
   async execute(request: CreateCheckinRequest): Promise<CreateCheckinResponse> {
     // 1. 참여 정보 확인
-    const participation = await this.participationRepository.findById(request.participationId);
-    if (!participation) {
-      throw new ParticipationNotFoundError(request.participationId);
-    }
+    // const participation = await this.participationRepository.findById(request.participationId);
+    // if (!participation) {
+    //   throw new ParticipationNotFoundError(request.participationId);
+    // }
 
     // 2. 참여 상태 확인
-    if (!participation.isActive()) {
-      throw new InactiveParticipationError(request.participationId);
-    }
+    // if (!participation.isActive()) {
+    //   throw new InactiveParticipationError(request.participationId);
+    // }
 
     // 3. 중복 체크인 확인
     const today = new Date();
-    const existingCheckin = await this.checkinRepository.findByUserIdAndDate(participation.userId, today);
-    if (existingCheckin) {
-      throw new AlreadyCheckedInError(participation.userId, today);
-    }
+    // const existingCheckin = await this.checkinRepository.findByUserIdAndDate(participation.userId, today);
+    // if (existingCheckin) {
+    //   throw new AlreadyCheckedInError(participation.userId, today);
+    // }
 
     // 4. 체크인 생성
     const checkin = Checkin.create(
-      participation.userId,
+      // 임시 사용자 ID
+      'temp-user-id',
       request.participationId,
       request.mood,
       request.note,
       request.imageUrl,
     );
-    const createdCheckin = await this.checkinRepository.save(checkin);
+    // const createdCheckin = await this.checkinRepository.save(checkin);
 
     // 5. 연속일 뱃지 확인
-    await this.badgeService.checkAndAwardBadge(participation.userId, 'STREAK_7' as any);
+    // await this.badgeService.checkAndAwardBadge(participation.userId, 'STREAK_7' as any);
 
-    return new CreateCheckinResponse(createdCheckin);
+    return new CreateCheckinResponse(checkin);
   }
 }
 

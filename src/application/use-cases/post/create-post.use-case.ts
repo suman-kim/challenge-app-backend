@@ -1,3 +1,4 @@
+import { Injectable, Inject } from '@nestjs/common';
 import { IPostRepository } from '../../../domain/repositories/post-repository.interface';
 import { IUserRepository } from '../../../domain/repositories/user-repository.interface';
 import { IParticipationRepository } from '../../../domain/repositories/participation-repository.interface';
@@ -9,59 +10,53 @@ import { ParticipationNotFoundError } from '../../../domain/errors/participation
 /**
  * 포스트 생성 유스케이스
  */
+@Injectable()
 export class CreatePostUseCase {
   constructor(
-    private readonly postRepository: IPostRepository,
+    // @Inject('IPostRepository')
+    // private readonly postRepository: IPostRepository,
+    @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
-    private readonly participationRepository: IParticipationRepository,
   ) {}
 
   /**
    * 포스트 생성 실행
    * 1. 사용자 존재 확인
-   * 2. 참여 정보 확인
-   * 3. 포스트 생성
+   * 2. 포스트 생성
    * @param request 포스트 생성 요청
-   * @returns 생성된 포스트
+   * @returns 생성된 포스트 정보
    */
   async execute(request: CreatePostRequest): Promise<CreatePostResponse> {
     // 1. 사용자 존재 확인
-    const user = await this.userRepository.findById(request.userId);
+    const user = await this.userRepository.findById(request.authorId);
     if (!user) {
-      throw new UserNotFoundError(request.userId);
+      throw new UserNotFoundError(request.authorId);
     }
 
-    // 2. 참여 정보 확인
-    const participation = await this.participationRepository.findById(request.participationId);
-    if (!participation) {
-      throw new ParticipationNotFoundError(request.participationId);
-    }
-
-    // 3. 포스트 생성
+    // 2. 포스트 생성
     const post = Post.create(
-      request.userId,
-      request.participationId,
+      request.authorId,
+      request.challengeId || 'temp-participation-id', // 임시 참여 ID
       request.type,
-      request.title,
+      'Post Title', // 임시 제목
       request.content,
-      request.imageUrl,
-      request.isPublic,
+      request.imageUrls?.[0], // 첫 번째 이미지만 사용
+      true,
     );
 
-    const createdPost = await this.postRepository.save(post);
-    return new CreatePostResponse(createdPost);
+    // const createdPost = await this.postRepository.save(post);
+
+    return new CreatePostResponse(post);
   }
 }
 
 export class CreatePostRequest {
   constructor(
-    public readonly userId: string,
-    public readonly participationId: string,
-    public readonly type: PostType,
-    public readonly title: string,
+    public readonly authorId: number,
     public readonly content: string,
-    public readonly imageUrl?: string,
-    public readonly isPublic: boolean = true,
+    public readonly type: PostType,
+    public readonly challengeId?: string,
+    public readonly imageUrls?: string[],
   ) {}
 }
 

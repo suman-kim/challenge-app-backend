@@ -6,34 +6,35 @@ import { UserRank } from '../../../../domain/enums/user-rank.enum';
  * 사용자 TypeORM 엔티티
  * 데이터베이스와 도메인 엔티티 간의 매핑 처리
  */
-@Entity('users')
+@Entity('users', { comment: '사용자 테이블' })
 export class UserTypeOrmEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('uuid', { comment: '사용자 ID' })
+  id: number; 
 
-  @Column({ unique: true })
+  @Column({ unique: true, comment: '사용자 이메일 & 로그인 아이디' })
   email: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, comment: '사용자 이름' })
   username: string;
 
-  @Column()
+  @Column({ comment: '비밀번호 해시' })
   passwordHash: string;
 
   @Column({ 
+    comment: '사용자 랭크',
     type: 'enum', 
     enum: UserRank,
-    default: UserRank.BEGINNER
+    default: UserRank.BRONZE
   })
   rank: UserRank;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, comment: '사용자 점수' })
   points: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ comment: '생성일' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ comment: '수정일' })
   updatedAt: Date;
 
   /**

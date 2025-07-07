@@ -22,18 +22,7 @@ export const databaseConfig: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME || 'root',
   password: process.env.DB_PASSWORD || 'root',
   database: process.env.DB_NAME || 'challenge_app',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
-  // entities: [
-  //   User,
-  //   //Challenge,
-  //  // ChallengeParticipation,
-  //  // DailyCheckin,
-  //   //Badge,
-  //   //UserBadge,
-  //   //Post,
-  //   //Comment,
-  //   //Like,
-  // ],
+  entities: [__dirname + '/../infrastructure/database/typeorm/entities/*.ts'],
   synchronize: process.env.NODE_ENV !== 'production', // 프로덕션에서는 false
   logging: process.env.NODE_ENV === 'development',
   timezone: '+09:00', // 한국 시간대

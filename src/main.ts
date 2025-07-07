@@ -20,7 +20,7 @@ async function bootstrap() {
 
   // CORS 설정
   app.enableCors({
-    origin: configService.get('FRONTEND_URL', 'http://localhost:3000'),
+    origin: "*",
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -55,12 +55,11 @@ async function bootstrap() {
   }
 
   // 애플리케이션 시작
-  const port = configService.get('PORT', 5000);
+  const port = configService.get('PORT', 6666);
   await app.listen(port);
   
   logger.log(`🚀 Application is running on: http://localhost:${port}`);
   logger.log(`🌍 Environment: ${configService.get('NODE_ENV', 'development')}`);
-  logger.log(`📦 Database: ${configService.get('DB_NAME', 'challenge_app')}`);
 }
 // 전역 에러 핸들링
 process.on('unhandledRejection', (reason, promise) => {

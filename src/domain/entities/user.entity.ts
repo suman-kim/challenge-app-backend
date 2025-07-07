@@ -7,7 +7,7 @@ import { UserRank } from '../enums/user-rank.enum';
  */
 export class User {
   constructor(
-    public readonly id: string,
+    public readonly id: number,
     public readonly email: string,
     public readonly username: string,
     public readonly passwordHash: string,
@@ -17,17 +17,13 @@ export class User {
     public readonly updatedAt: Date,
   ) {}
 
-  static create(
-    email: string,
-    username: string,
-    passwordHash: string,
-  ): User {
+  static create(email: string, username: string, passwordHash: string): User {
     return new User(
       undefined,
       email,
       username,
       passwordHash,
-      UserRank.BEGINNER,
+      UserRank.BRONZE,
       0,
       new Date(),
       new Date(),
@@ -86,12 +82,24 @@ export class User {
    * @param score 현재 총 점수
    * @returns 계산된 사용자 랭크
    */
+  // BRONZE = 'bronze',      // 0~999점
+  // SILVER = 'silver',      // 1000~2999점
+  // GOLD = 'gold',          // 3000~5999점
+  // PLATINUM = 'platinum',  // 6000~9999점
+  // DIAMOND = 'diamond',    // 10000~14999점
+  // MASTER = 'master',      // 15000~24999점
+  // GRANDMASTER = 'grandmaster', // 25000~39999점
+  // CHALLENGER = 'challenger',   // 40000~59999점
+  // LEGEND = 'legend'       // 60000점 이상
   private calculateRank(score: number): UserRank {
+    if (score >= 60000) return UserRank.LEGEND;
+    if (score >= 40000) return UserRank.CHALLENGER;
+    if (score >= 25000) return UserRank.GRANDMASTER;
     if (score >= 10000) return UserRank.MASTER;
-    if (score >= 5000) return UserRank.EXPERT;
-    if (score >= 2000) return UserRank.ADVANCED;
-    if (score >= 500) return UserRank.INTERMEDIATE;
-    return UserRank.BEGINNER;
+    if (score >= 5000) return UserRank.DIAMOND;
+    if (score >= 3000) return UserRank.GOLD;
+    if (score >= 1000) return UserRank.SILVER;
+    return UserRank.BRONZE;
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * API 응답 타입 정의
+ * API 응답 인터페이스
  */
 export interface ApiResponse<T> {
   success: boolean;
@@ -9,11 +9,4 @@ export interface ApiResponse<T> {
   timestamp?: string;
   path?: string;
   responseTime?: string;
-}
-
-export interface PaginationResponse {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
 } 

@@ -7,7 +7,7 @@ import { PostType } from '../enums/post-type.enum';
 export class Post {
   constructor(
     public readonly id: string,
-    public readonly userId: string,
+    public readonly userId: number,
     public readonly participationId: string,
     public readonly type: PostType,
     public readonly title: string,
@@ -21,7 +21,7 @@ export class Post {
   ) {}
 
   static create(
-    userId: string,
+    userId: number,
     participationId: string,
     type: PostType,
     title: string,
@@ -152,7 +152,7 @@ export class Post {
    * @param userId 확인할 사용자 ID
    * @returns 작성자 여부
    */
-  public isAuthor(userId: string): boolean {
+  public isAuthor(userId: number): boolean {
     return this.userId === userId;
   }
 

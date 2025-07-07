@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { IPasswordService } from '../../domain/services/password.service.interface';
+import { IPasswordService } from '../../domain/services/password-service.interface';
 
 /**
  * 비밀번호 서비스 구현체
