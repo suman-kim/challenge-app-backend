@@ -8,7 +8,7 @@ import { UserRank } from '../../../../domain/enums/user-rank.enum';
  */
 @Entity('users', { comment: '사용자 테이블' })
 export class UserTypeOrmEntity {
-  @PrimaryGeneratedColumn('uuid', { comment: '사용자 ID' })
+  @PrimaryGeneratedColumn({ comment: '사용자 ID' })
   id: number; 
 
   @Column({ unique: true, comment: '사용자 이메일 & 로그인 아이디' })

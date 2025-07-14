@@ -1,0 +1,11 @@
+# Task ID: 7
+# Title: 소셜 기능 구현
+# Status: pending
+# Dependencies: 4
+# Priority: medium
+# Description: 피드 포스트, 댓글, 좋아요 시스템 구현
+# Details:
+포스트 작성, 이미지 첨부, 댓글 및 대댓글, 좋아요 기능 구현
+
+# Test Strategy:
+포스트 생성, 댓글 작성, 좋아요 기능 테스트

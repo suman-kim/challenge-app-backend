@@ -1,0 +1,11 @@
+# Task ID: 8
+# Title: 통계 및 분석 시스템 구현
+# Status: pending
+# Dependencies: 4
+# Priority: medium
+# Description: 개인 통계 및 챌린지 통계 API 구현
+# Details:
+사용자 활동 통계, 챌린지 통계, 시각적 차트 데이터 제공 API 구현
+
+# Test Strategy:
+통계 데이터 정확성 및 차트 데이터 형식 검증

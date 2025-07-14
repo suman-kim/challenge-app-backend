@@ -2,18 +2,21 @@ import { Controller, Post, Body, Get, UseGuards, Request, BadRequestException, U
 import { ApiTags, ApiOperation, ApiResponse as SwaggerApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateUserUseCase, CreateUserRequest } from '../../application/use-cases/user/create-user.use-case';
 import { LoginUserUseCase, LoginUserRequest } from '../../application/use-cases/user/login-user.use-case';
+import { RefreshTokenUseCase } from '../../application/use-cases/user/refresh-token.use-case';
 import { 
   CreateUserDto, 
   LoginDto, 
+  RefreshTokenDto,
   UserProfileDto, 
-  AuthResponseDto 
+  AuthResponseDto,
+  TokenRefreshResponseDto
 } from '../../shared/dto/auth/auth.dto';
 import { ApiResponse } from '../../shared/interfaces/api-response.interface';
 import { JwtAuthGuard } from '../../shared/interfaces/jwt-auth.guard';
 
 /**
  * 인증 컨트롤러
- * 회원가입, 로그인 관련 HTTP 요청 처리
+ * 회원가입, 로그인, 토큰 갱신 관련 HTTP 요청 처리
  */
 @ApiTags('인증 (Authentication)')
 @Controller('auth')
@@ -21,17 +24,18 @@ export class AuthController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly loginUserUseCase: LoginUserUseCase,
+    private readonly refreshTokenUseCase: RefreshTokenUseCase,
   ) {}
 
   /**
    * 회원가입 엔드포인트
    * POST /auth/register
    * @param body 회원가입 요청 데이터
-   * @returns 생성된 사용자 정보 및 토큰
+   * @returns 생성된 사용자 정보 (토큰 포함)
    */
   @ApiOperation({ 
     summary: '회원가입', 
-    description: '새로운 사용자 계정을 생성합니다.' 
+    description: '새로운 사용자 계정을 생성하고 자동으로 로그인합니다.' 
   })
   @ApiBody({ type: CreateUserDto })
   @SwaggerApiResponse({ 
@@ -53,6 +57,8 @@ export class AuthController {
         success: true,
         message: '회원가입이 완료되었습니다.',
         data: {
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
           user: {
             id: response.user.id,
             email: response.user.email,
@@ -71,11 +77,11 @@ export class AuthController {
    * 로그인 엔드포인트
    * POST /auth/login
    * @param body 로그인 요청 데이터
-   * @returns JWT 토큰 및 사용자 정보
+   * @returns JWT 토큰 페어 및 사용자 정보
    */
   @ApiOperation({ 
     summary: '로그인', 
-    description: '이메일과 비밀번호로 로그인하여 JWT 토큰을 발급받습니다.' 
+    description: '이메일과 비밀번호로 로그인하여 JWT 토큰 페어를 발급받습니다.' 
   })
   @ApiBody({ type: LoginDto })
   @SwaggerApiResponse({ 
@@ -98,6 +104,7 @@ export class AuthController {
         message: '로그인이 완료되었습니다.',
         data: {
           accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
           user: {
             id: response.user.id,
             email: response.user.email,
@@ -105,6 +112,44 @@ export class AuthController {
             rank: response.user.rank,
             points: response.user.points,
           },
+        },
+      };
+    } catch (error) {
+      throw new UnauthorizedException(error.message);
+    }
+  }
+
+  /**
+   * 토큰 갱신 엔드포인트
+   * POST /auth/refresh
+   * @param body 토큰 갱신 요청 데이터
+   * @returns 새로운 JWT 토큰 페어
+   */
+  @ApiOperation({ 
+    summary: '토큰 갱신', 
+    description: '리프레시 토큰을 사용하여 새로운 액세스 토큰과 리프레시 토큰을 발급받습니다.' 
+  })
+  @ApiBody({ type: RefreshTokenDto })
+  @SwaggerApiResponse({ 
+    status: 200, 
+    description: '토큰 갱신 성공',
+    type: TokenRefreshResponseDto
+  })
+  @SwaggerApiResponse({ 
+    status: 401, 
+    description: '인증 실패 (유효하지 않은 리프레시 토큰)' 
+  })
+  @Post('refresh')
+  async refreshToken(@Body() body: RefreshTokenDto): Promise<ApiResponse<TokenRefreshResponseDto>> {
+    try {
+      const response = await this.refreshTokenUseCase.executeWithDto(body);
+      
+      return {
+        success: true,
+        message: '토큰 갱신이 완료되었습니다.',
+        data: {
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
         },
       };
     } catch (error) {

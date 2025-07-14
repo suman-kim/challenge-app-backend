@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: 챌린지 시스템 구현
+# Status: pending
+# Dependencies: 2
+# Priority: high
+# Description: 챌린지 생성, 조회, 참여, 탈퇴 API 구현
+# Details:
+15개 카테고리별 챌린지 생성, 필터링, 검색, 참여 관리 기능 구현
+
+# Test Strategy:
+다양한 챌린지 생성 및 참여 시나리오 테스트

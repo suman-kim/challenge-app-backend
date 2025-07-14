@@ -1,0 +1,331 @@
+{
+  "metadata": {
+    "title": "30일 챌린지 앱 백엔드 개발",
+    "description": "NestJS를 사용한 30일 챌린지 앱 백엔드 API 개발",
+    "version": "1.0.0",
+    "created": "2025-01-07",
+    "projectRoot": "/Volumes/T7/suman/project/server/challenge-app-backend"
+  },
+  "master": {
+    "name": "master",
+    "active": true,
+    "tasks": [
+      {
+        "id": 1,
+        "title": "데이터베이스 스키마 설계 및 마이그레이션",
+        "description": "MySQL 데이터베이스 스키마 설계 및 TypeORM 마이그레이션 파일 생성",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [],
+        "details": "사용자, 챌린지, 체크인, 참여 등의 테이블 설계 및 관계 정의. TypeORM 엔티티 및 마이그레이션 파일 생성",
+        "testStrategy": "마이그레이션 실행 후 데이터베이스 테이블 생성 확인",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "사용자 관리 시스템 구현",
+        "description": "회원가입, 로그인, 프로필 관리 기능을 포함한 완전한 사용자 관리 시스템",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "details": "NestJS Clean Architecture 패턴으로 구현된 완전한 사용자 관리 시스템:\n- JWT 기반 인증 시스템 (accessToken + refreshToken)\n- 회원가입, 로그인, 프로필 관리 기능\n- 비밀번호 해싱 및 보안 처리\n- TypeORM을 통한 데이터베이스 연동\n- Swagger API 문서화\n- 완전한 의존성 주입 구조",
+        "testStrategy": "Postman/curl을 통한 API 테스트 및 JWT 토큰 검증",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "JWT 인증 시스템 구현",
+            "description": "JWT 토큰 생성, 검증, 갱신 기능 구현",
+            "status": "done",
+            "details": "2025-01-07: JWT 인증 시스템 완전 구현 완료\n\n구현 내용:\n1. JWT 서비스 인터페이스 및 구현체\n   - generateAccessToken(): 15분 만료 액세스 토큰\n   - generateRefreshToken(): 7일 만료 리프레시 토큰\n   - verifyToken(): 토큰 검증\n   - verifyRefreshToken(): 리프레시 토큰 검증\n   - generateTokenPair(): 토큰 페어 생성\n\n2. JWT 인증 가드 구현\n   - JwtAuthGuard: 요청 헤더에서 토큰 추출 및 검증\n   - 사용자 정보 주입 기능\n\n3. 모듈 설정 및 의존성 주입\n   - InfrastructureModule에서 JWT 서비스 제공\n   - 모든 계층에서 사용 가능한 구조",
+            "testStrategy": "API 테스트를 통한 토큰 발급 및 검증 확인"
+          },
+          {
+            "id": 2,
+            "title": "회원가입 기능 구현",
+            "description": "CreateUserUseCase 및 CreateUserDto 구현, 이메일 중복 검사 및 비밀번호 해시 처리",
+            "status": "done",
+            "details": "2025-01-07: 회원가입 기능 완전 구현 완료\n\n구현 내용:\n1. CreateUserUseCase\n   - 이메일 중복 검사\n   - 비밀번호 해싱 처리\n   - 사용자 생성 후 자동 토큰 발급\n   - 배지 서비스 연동\n\n2. CreateUserDto\n   - 이메일 검증 (format validation)\n   - 비밀번호 길이 검증 (최소 6자)\n   - 사용자명 검증\n\n3. API 엔드포인트: POST /api/v1/auth/register\n   - 회원가입 시 자동 로그인 처리\n   - accessToken과 refreshToken 모두 발급\n   - 생성된 사용자 정보 반환",
+            "testStrategy": "회원가입 API 테스트 및 토큰 발급 검증"
+          },
+          {
+            "id": 3,
+            "title": "로그인 기능 구현",
+            "description": "LoginUserUseCase 및 LoginDto 구현, 비밀번호 검증 및 JWT 토큰 발급",
+            "status": "done",
+            "details": "2025-01-07: 로그인 기능 완전 구현 완료\n\n구현 내용:\n1. LoginUserUseCase\n   - 이메일로 사용자 검색\n   - 비밀번호 검증 (해시 비교)\n   - JWT 토큰 페어 발급\n   - 사용자 정보 반환\n\n2. LoginDto\n   - 이메일 format 검증\n   - 비밀번호 필드 검증\n\n3. API 엔드포인트: POST /api/v1/auth/login\n   - accessToken과 refreshToken 모두 발급\n   - 사용자 정보 반환\n   - 에러 처리 (존재하지 않는 사용자, 잘못된 비밀번호)",
+            "testStrategy": "로그인 API 테스트 및 토큰 발급 검증"
+          },
+          {
+            "id": 4,
+            "title": "프로필 조회 기능 구현",
+            "description": "인증된 사용자의 프로필 정보 조회 API 구현",
+            "status": "done",
+            "details": "2025-01-07: 프로필 조회 기능 완전 구현 완료\n\n구현 내용:\n1. API 엔드포인트: GET /api/v1/auth/profile\n   - JWT 인증 가드 적용\n   - 토큰에서 사용자 정보 추출\n   - 사용자 프로필 반환\n\n2. 인증 처리\n   - Bearer 토큰 방식 사용\n   - JwtAuthGuard를 통한 자동 검증\n   - 요청 객체에 사용자 정보 주입\n\n3. 응답 데이터\n   - 이메일, 사용자명, 랭크, 포인트 정보 반환\n   - 민감한 정보(비밀번호) 제외",
+            "testStrategy": "JWT 토큰을 사용한 프로필 조회 API 테스트"
+          },
+          {
+            "id": 5,
+            "title": "프로필 업데이트 기능 구현",
+            "description": "UpdateUserUseCase 및 UpdateUserDto 구현, 사용자 정보 수정 기능",
+            "status": "done",
+            "details": "2025-01-07: 프로필 업데이트 기능 완전 구현 완료\n\n구현 내용:\n1. UpdateUserUseCase\n   - 사용자 정보 업데이트 로직\n   - 선택적 필드 업데이트 지원\n   - 업데이트된 사용자 정보 반환\n\n2. UpdateUserDto\n   - 선택적 필드 검증\n   - 이메일 format 검증 (업데이트 시)\n   - 사용자명 검증\n\n3. API 엔드포인트: PUT /api/v1/users/profile\n   - JWT 인증 가드 적용\n   - 부분 업데이트 지원\n   - 업데이트된 사용자 정보 반환",
+            "testStrategy": "JWT 토큰을 사용한 프로필 업데이트 API 테스트"
+          },
+          {
+            "id": 6,
+            "title": "JWT 인증 가드 구현",
+            "description": "JwtAuthGuard 구현 및 보호된 엔드포인트에 적용",
+            "status": "done",
+            "details": "2025-01-07: JWT 인증 가드 완전 구현 완료\n\n구현 내용:\n1. JwtAuthGuard 클래스\n   - CanActivate 인터페이스 구현\n   - Authorization 헤더에서 토큰 추출\n   - JWT 토큰 검증 및 사용자 정보 주입\n\n2. 토큰 처리 로직\n   - Bearer 토큰 방식 지원\n   - 토큰 검증 실패 시 401 Unauthorized 반환\n   - 요청 객체에 사용자 정보 주입\n\n3. 모듈 설정\n   - InfrastructureModule에서 제공\n   - 모든 보호된 엔드포인트에 적용 가능",
+            "testStrategy": "인증이 필요한 엔드포인트 접근 테스트"
+          },
+          {
+            "id": 7,
+            "title": "토큰 갱신 기능 구현",
+            "description": "RefreshTokenUseCase 구현 및 토큰 갱신 API 구현",
+            "status": "done",
+            "details": "2025-01-07: 토큰 갱신 기능 완전 구현 완료\n\n구현 내용:\n1. RefreshTokenUseCase\n   - 리프레시 토큰 검증\n   - 새로운 토큰 페어 생성\n   - 사용자 정보 확인\n\n2. RefreshTokenDto\n   - 리프레시 토큰 검증\n   - 요청 데이터 validation\n\n3. API 엔드포인트: POST /api/v1/auth/refresh\n   - 리프레시 토큰으로 새로운 액세스 토큰 발급\n   - 새로운 리프레시 토큰도 함께 발급\n   - 토큰 rotation 보안 패턴 적용\n\n4. 보안 강화\n   - 액세스 토큰: 15분 만료\n   - 리프레시 토큰: 7일 만료\n   - 토큰 갱신 시 새로운 페어 발급",
+            "testStrategy": "리프레시 토큰을 사용한 토큰 갱신 API 테스트"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "챌린지 시스템 구현",
+        "description": "챌린지 생성, 조회, 참여, 탈퇴 API 구현",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "details": "15개 카테고리별 챌린지 생성, 필터링, 검색, 참여 관리 기능 구현\n\n주요 기능:\n- 챌린지 생성 (제목, 설명, 카테고리, 난이도, 기간, 최대 참여자 수)\n- 챌린지 목록 조회 (필터링, 검색, 정렬)\n- 챌린지 상세 조회 (참여자 정보 포함)\n- 챌린지 참여 (중복 참여 방지, 정원 체크)\n- 챌린지 탈퇴 (활성 참여자만 탈퇴 가능)\n- 카테고리 관리 (15개 카테고리 설정)\n- 참여 상태 관리 (ACTIVE, COMPLETED, DROPPED)",
+        "testStrategy": "Postman/curl을 통한 API 테스트 및 데이터베이스 상태 확인",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "챌린지 도메인 엔티티 및 리포지토리 구현",
+            "description": "Challenge, Category, Participation 도메인 엔티티 및 리포지토리 인터페이스 구현",
+            "status": "in-progress",
+            "details": "도메인 계층 구현:\n- Challenge 엔티티 (제목, 설명, 카테고리, 난이도, 기간, 최대 참여자 수)\n- Category 엔티티 (15개 카테고리)\n- Participation 엔티티 (사용자-챌린지 관계)\n- 각 엔티티의 리포지토리 인터페이스\n- 도메인 서비스 인터페이스 (RewardCalculator 등)",
+            "testStrategy": "TypeORM 엔티티 테스트 및 데이터베이스 스키마 확인"
+          },
+          {
+            "id": 2,
+            "title": "챌린지 생성 기능 구현",
+            "description": "CreateChallengeUseCase 및 관련 DTO 구현",
+            "status": "done",
+            "details": "챌린지 생성 로직 구현:\n- CreateChallengeUseCase\n- CreateChallengeDto (제목, 설명, 카테고리, 난이도, 기간, 최대 참여자 수 검증)\n- 챌린지 생성 API 엔드포인트\n- 인증된 사용자만 생성 가능\n- 카테고리 존재 여부 확인\n- 기간 및 참여자 수 검증",
+            "testStrategy": "챌린지 생성 API 테스트 및 데이터베이스 삽입 확인"
+          },
+          {
+            "id": 3,
+            "title": "챌린지 조회 기능 구현",
+            "description": "챌린지 목록 조회 및 상세 조회 기능 구현",
+            "status": "in-progress",
+            "details": "챌린지 조회 로직 구현:\n- 챌린지 목록 조회 (필터링, 검색, 정렬)\n- 챌린지 상세 조회 (참여자 정보 포함)\n- 필터 조건: 카테고리, 난이도, 상태\n- 검색 조건: 제목, 설명\n- 정렬 조건: 생성일, 참여자 수, 난이도\n- 페이지네이션 적용",
+            "testStrategy": "다양한 필터 조건으로 챌린지 조회 API 테스트"
+          },
+          {
+            "id": 4,
+            "title": "챌린지 참여 기능 구현",
+            "description": "JoinChallengeUseCase 및 참여 관리 기능 구현",
+            "status": "pending",
+            "details": "챌린지 참여 로직 구현:\n- JoinChallengeUseCase\n- 중복 참여 방지 (이미 참여 중인 챌린지 체크)\n- 정원 체크 (최대 참여자 수 확인)\n- 참여 상태 생성 (ACTIVE 상태로 시작)\n- 참여자 수 업데이트\n- 참여 완료 시 배지 서비스 연동",
+            "testStrategy": "챌린지 참여 API 테스트 및 중복 참여 방지 확인"
+          },
+          {
+            "id": 5,
+            "title": "챌린지 탈퇴 기능 구현",
+            "description": "챌린지 탈퇴 및 참여 상태 관리 기능 구현",
+            "status": "pending",
+            "details": "챌린지 탈퇴 로직 구현:\n- 활성 참여자만 탈퇴 가능\n- 참여 상태를 DROPPED로 변경\n- 참여자 수 업데이트\n- 탈퇴 시점 기록\n- 포인트 차감 로직 (필요시)",
+            "testStrategy": "챌린지 탈퇴 API 테스트 및 상태 변경 확인"
+          },
+          {
+            "id": 6,
+            "title": "카테고리 관리 시스템 구현",
+            "description": "15개 카테고리 관리 및 카테고리별 챌린지 필터링 구현",
+            "status": "pending",
+            "details": "카테고리 관리 시스템 구현:\n- 15개 카테고리 데이터 시드\n- 카테고리별 챌린지 필터링\n- 카테고리 조회 API\n- 카테고리별 통계 (챌린지 수, 참여자 수)\n- 카테고리 아이콘 및 색상 정보",
+            "testStrategy": "카테고리 API 테스트 및 필터링 기능 확인"
+          },
+          {
+            "id": 7,
+            "title": "TypeORM 리포지토리 구현",
+            "description": "챌린지 관련 TypeORM 리포지토리 구현체 작성",
+            "status": "pending",
+            "details": "인프라스트럭처 계층 구현:\n- ChallengeRepository 구현체\n- CategoryRepository 구현체\n- ParticipationRepository 구현체\n- 복잡한 쿼리 구현 (JOIN, 필터링, 정렬)\n- 인덱스 최적화\n- 트랜잭션 처리",
+            "testStrategy": "데이터베이스 쿼리 테스트 및 성능 확인"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "체크인 시스템 구현",
+        "description": "일일 체크인 기록 및 조회 API 구현",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "details": "하루 한 번 체크인 제한, 메모 작성, 사진 첨부, 점수 계산 기능 구현",
+        "testStrategy": "체크인 중복 방지 및 점수 계산 로직 검증",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "랭킹 시스템 구현",
+        "description": "전체, 주간, 월간 랭킹 시스템 구현",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "details": "점수 기반 랭킹 시스템, 페이지네이션, 내 순위 조회 기능 구현",
+        "testStrategy": "다양한 점수 시나리오에서 랭킹 정확성 검증",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "뱃지 시스템 구현",
+        "description": "자동 뱃지 획득 및 컬렉션 관리 시스템 구현",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "details": "점수 기반 뱃지, 연속 달성 뱃지, 챌린지 완료 뱃지 자동 획득 시스템 구현",
+        "testStrategy": "뱃지 획득 조건 달성 시 자동 획득 로직 검증",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "소셜 기능 구현",
+        "description": "피드 포스트, 댓글, 좋아요 시스템 구현",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "details": "포스트 작성, 이미지 첨부, 댓글 및 대댓글, 좋아요 기능 구현",
+        "testStrategy": "포스트 생성, 댓글 작성, 좋아요 기능 테스트",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "통계 및 분석 시스템 구현",
+        "description": "개인 통계 및 챌린지 통계 API 구현",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "details": "사용자 활동 통계, 챌린지 통계, 시각적 차트 데이터 제공 API 구현",
+        "testStrategy": "통계 데이터 정확성 및 차트 데이터 형식 검증",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "이미지 업로드 시스템 구현",
+        "description": "프로필 이미지 및 체크인 사진 업로드 처리 시스템 구현",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "details": "Multer를 이용한 이미지 업로드, 파일 형식 검증, 크기 제한, 저장 위치 관리",
+        "testStrategy": "다양한 이미지 형식 및 크기 업로드 테스트",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "푸시 알림 시스템 구현",
+        "description": "체크인 알림, 뱃지 획득 알림 등 푸시 알림 시스템 구현",
+        "status": "pending",
+        "priority": "low",
+        "dependencies": [
+          6
+        ],
+        "details": "Firebase FCM을 이용한 푸시 알림 서비스 구현",
+        "testStrategy": "알림 발송 조건 및 수신 확인 테스트",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "API 보안 및 Rate Limiting 구현",
+        "description": "API 보안 강화 및 Rate Limiting 시스템 구현",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "details": "CORS 설정, Rate Limiting (IP당 100 req/min), 입력 검증 강화, 에러 핸들링 개선",
+        "testStrategy": "보안 취약점 스캔 및 Rate Limiting 동작 검증",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "API 문서화 및 Swagger 설정",
+        "description": "Swagger를 이용한 API 문서 자동 생성 및 설정",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "details": "모든 API 엔드포인트에 대한 Swagger 문서 생성, DTO 스키마 정의",
+        "testStrategy": "Swagger UI에서 API 문서 확인 및 테스트",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "성능 최적화 및 캐싱 구현",
+        "description": "데이터베이스 쿼리 최적화 및 Redis 캐싱 구현",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "details": "자주 조회되는 데이터 캐싱, 쿼리 최적화, 인덱싱 개선",
+        "testStrategy": "성능 테스트 및 캐시 적중률 확인",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "테스트 코드 작성",
+        "description": "단위 테스트 및 통합 테스트 코드 작성",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "details": "Jest를 이용한 테스트 코드 작성, 커버리지 80% 이상 달성",
+        "testStrategy": "테스트 실행 및 커버리지 보고서 확인",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "배포 환경 설정",
+        "description": "Docker 컨테이너화 및 배포 환경 설정",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "details": "Dockerfile 작성, Docker Compose 설정, 환경 변수 관리, 배포 스크립트 작성",
+        "testStrategy": "Docker 컨테이너 빌드 및 배포 테스트",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-09T05:12:31.706Z",
+      "updated": "2025-07-11T09:04:03.850Z",
+      "description": "Tasks for master context"
+    }
+  },
+  "currentTag": "master",
+  "global": {
+    "defaultTag": "master"
+  }
+}

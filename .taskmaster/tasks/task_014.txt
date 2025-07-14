@@ -1,0 +1,11 @@
+# Task ID: 14
+# Title: 테스트 코드 작성
+# Status: pending
+# Dependencies: 12
+# Priority: medium
+# Description: 단위 테스트 및 통합 테스트 코드 작성
+# Details:
+Jest를 이용한 테스트 코드 작성, 커버리지 80% 이상 달성
+
+# Test Strategy:
+테스트 실행 및 커버리지 보고서 확인

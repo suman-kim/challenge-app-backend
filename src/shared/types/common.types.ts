@@ -10,11 +10,6 @@ export interface UserAnalytics {
   averageMood: number;
 }
 
-export interface IJwtService {
-  generateToken(payload: any): Promise<string>;
-  verifyToken(token: string): Promise<any>;
-}
-
 export interface IUserBadgeRepository {
   findByUserAndBadge(userId: number, badgeId: number): Promise<any>;
   create(data: any): Promise<any>;

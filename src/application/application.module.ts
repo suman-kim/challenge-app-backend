@@ -1,51 +1,32 @@
 import { Module } from '@nestjs/common';
 import { InfrastructureModule } from '../infrastructure/infrastructure.module';
-
-// User Use Cases
 import { CreateUserUseCase } from './use-cases/user/create-user.use-case';
 import { LoginUserUseCase } from './use-cases/user/login-user.use-case';
-
-// Challenge Use Cases
-import { CreateChallengeUseCase } from './use-cases/challenge/create-challenge.use-case';
-import { JoinChallengeUseCase } from './use-cases/challenge/join-challenge.use-case';
-
-// Checkin Use Cases
-import { CreateCheckinUseCase } from './use-cases/checkin/create-checkin.use-case';
-
-// Post Use Cases
-import { CreatePostUseCase } from './use-cases/post/create-post.use-case';
+import { RefreshTokenUseCase } from './use-cases/user/refresh-token.use-case';
+import { UpdateUserUseCase } from './use-cases/user/update-user.use-case';
 
 /**
- * 애플리케이션 모듈
- * 모든 Use Case들을 등록
+ * 애플리케이션 계층 모듈
+ * 유스케이스와 애플리케이션 서비스를 등록
  */
 @Module({
-  imports: [InfrastructureModule],
+  imports: [
+    // 인프라스트럭처 모듈 import (Repository, Service, JWT 모듈 제공)
+    InfrastructureModule,
+  ],
   providers: [
-    // User Use Cases
+    // 유스케이스 등록
     CreateUserUseCase,
     LoginUserUseCase,
-    
-    // Challenge Use Cases
-    CreateChallengeUseCase,
-    JoinChallengeUseCase,
-    
-    // Checkin Use Cases
-    CreateCheckinUseCase,
-    
-    // Post Use Cases
-    CreatePostUseCase,
-    
-    // 나중에 다른 Use Case들 추가
+    RefreshTokenUseCase,
+    UpdateUserUseCase,
   ],
   exports: [
-    // 모든 Use Case들을 export
+    // 다른 모듈에서 사용할 수 있도록 내보내기
     CreateUserUseCase,
     LoginUserUseCase,
-    CreateChallengeUseCase,
-    JoinChallengeUseCase,
-    CreateCheckinUseCase,
-    CreatePostUseCase,
+    RefreshTokenUseCase,
+    UpdateUserUseCase,
   ],
 })
 export class ApplicationModule {}

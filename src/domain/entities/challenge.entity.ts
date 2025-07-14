@@ -6,7 +6,7 @@ import { ChallengeDifficulty } from '../enums/challenge-difficulty.enum';
  */
 export class Challenge {
   constructor(
-    public readonly id: string,
+    public readonly id: number | undefined,
     public readonly title: string,
     public readonly description: string,
     public readonly difficulty: ChallengeDifficulty,

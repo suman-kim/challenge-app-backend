@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: 체크인 시스템 구현
+# Status: pending
+# Dependencies: 3
+# Priority: high
+# Description: 일일 체크인 기록 및 조회 API 구현
+# Details:
+하루 한 번 체크인 제한, 메모 작성, 사진 첨부, 점수 계산 기능 구현
+
+# Test Strategy:
+체크인 중복 방지 및 점수 계산 로직 검증

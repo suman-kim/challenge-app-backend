@@ -77,24 +77,36 @@ export class ChallengeController {
   @UseGuards(JwtAuthGuard)
   async create(@Body() body: CreateChallengeDto, @Request() req): Promise<ApiResponse<ChallengeDto>> {
     try {
-      // const request = new CreateChallengeRequest(
-      //   body.title, body.description, body.categoryId, body.difficulty,
-      //   req.user.id, body.durationDays, body.maxParticipants,
-      //   body.startDate, body.endDate, body.isPublic, body.tags
-      // );
-      // const response = await this.createChallengeUseCase.execute(request);
-      
+      // 요청 DTO → 유스케이스 Request 매핑
+      const request = new CreateChallengeRequest(
+        body.title,
+        body.description || '',
+        body.categoryId,
+        body.difficulty,
+        req.user.id, // 인증된 사용자 ID
+        body.durationDays || 30,
+        body.isPublic ?? true,
+        body.maxParticipants,
+        body.startDate,
+        body.endDate,
+        body.tags || [],
+      );
+      // 유스케이스 실행
+      const response = await this.createChallengeUseCase.execute(request);
+      const challenge = response.challenge;
+      // Challenge 엔티티 → ChallengeDto 변환
+      const result: ChallengeDto = {
+        id: challenge.id!,
+        title: challenge.title,
+        description: challenge.description,
+        difficulty: challenge.difficulty,
+        rewardPoints: challenge.pointsReward,
+        durationDays: challenge.duration,
+      };
       return {
         success: true,
         message: '챌린지가 생성되었습니다.',
-        data: {
-          id: 1, // 임시 ID
-          title: body.title,
-          description: body.description || '',
-          difficulty: body.difficulty,
-          rewardPoints: 100, // 임시 값
-          durationDays: body.durationDays || 30,
-        },
+        data: result,
       };
     } catch (error) {
       throw new BadRequestException(error.message);

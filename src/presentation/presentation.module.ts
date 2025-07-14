@@ -1,25 +1,21 @@
 import { Module } from '@nestjs/common';
-import { ApplicationModule } from '../application/application.module';
-
-// Controllers
 import { AuthController } from './controllers/auth.controller';
-import { ChallengeController } from './controllers/challenge.controller';
-import { CheckinController } from './controllers/checkin.controller';
+import { UserController } from './controllers/user.controller';
+import { ApplicationModule } from '../application/application.module';
+import { InfrastructureModule } from '../infrastructure/infrastructure.module';
 
 /**
- * 프리젠테이션 모듈
- * 모든 컨트롤러들을 등록
+ * 프레젠테이션 계층 모듈
+ * 컨트롤러와 HTTP 요청/응답 처리를 담당
  */
 @Module({
-  imports: [ApplicationModule],
-  controllers: [
-    AuthController,
-    ChallengeController,
-    CheckinController,
-    // 나중에 다른 컨트롤러들 추가
+  imports: [
+    ApplicationModule,
+    InfrastructureModule, // JwtAuthGuard 접근을 위해 직접 import
   ],
+  controllers: [AuthController, UserController],
   providers: [
-    // 나중에 Guards, Interceptors, Filters 추가
+    // UseCase들은 ApplicationModule에서 이미 제공되므로 여기서 다시 등록하지 않음
   ],
 })
 export class PresentationModule {} 

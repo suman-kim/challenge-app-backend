@@ -1,0 +1,55 @@
+# Task ID: 2
+# Title: 사용자 관리 시스템 구현
+# Status: in-progress
+# Dependencies: 1
+# Priority: high
+# Description: 사용자 회원가입, 로그인, 프로필 관리 API 구현
+# Details:
+JWT 인증 기반 사용자 관리 시스템. 회원가입, 로그인, 프로필 조회/수정 기능 구현
+
+# Test Strategy:
+Postman을 통한 API 테스트 및 JWT 토큰 검증
+
+# Subtasks:
+## 1. JWT 인증 시스템 구현 [done]
+### Dependencies: None
+### Description: JWT 서비스 인터페이스 및 구현체 생성, 토큰 생성/검증 기능 구현
+### Details:
+
+
+## 2. 회원가입 기능 구현 [done]
+### Dependencies: None
+### Description: CreateUserUseCase 및 CreateUserDto 구현, 이메일 중복 검사 및 비밀번호 해시 처리
+### Details:
+
+
+## 3. 로그인 기능 구현 [done]
+### Dependencies: None
+### Description: LoginUserUseCase 및 LoginDto 구현, 비밀번호 검증 및 JWT 토큰 생성
+### Details:
+
+
+## 4. 프로필 조회 기능 구현 [done]
+### Dependencies: None
+### Description: JWT 인증 기반 현재 사용자 정보 조회 API 구현
+### Details:
+
+
+## 5. 프로필 수정 기능 구현 [done]
+### Dependencies: None
+### Description: UpdateUserUseCase 및 UpdateUserDto 구현, 사용자 정보 수정 API 구현
+### Details:
+
+
+## 6. JWT 인증 가드 구현 [done]
+### Dependencies: None
+### Description: JwtAuthGuard 구현, Authorization 헤더 토큰 검증 및 사용자 정보 추출
+### Details:
+
+
+## 7. API 테스트 실행 [pending]
+### Dependencies: None
+### Description: Postman 또는 Thunder Client로 회원가입, 로그인, 프로필 조회/수정 API 테스트
+### Details:
+
+

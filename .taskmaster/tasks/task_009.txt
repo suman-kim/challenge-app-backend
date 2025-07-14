@@ -1,0 +1,11 @@
+# Task ID: 9
+# Title: 이미지 업로드 시스템 구현
+# Status: pending
+# Dependencies: 4
+# Priority: medium
+# Description: 프로필 이미지 및 체크인 사진 업로드 처리 시스템 구현
+# Details:
+Multer를 이용한 이미지 업로드, 파일 형식 검증, 크기 제한, 저장 위치 관리
+
+# Test Strategy:
+다양한 이미지 형식 및 크기 업로드 테스트

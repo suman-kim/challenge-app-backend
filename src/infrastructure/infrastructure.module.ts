@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 
 // Entities
 import { UserTypeOrmEntity } from './database/typeorm/entities/user.typeorm-entity';
@@ -12,6 +13,10 @@ import { PasswordService } from './services/password.service';
 import { BadgeService } from './services/badge.service';
 import { NotificationService } from './services/notification.service';
 import { RewardCalculatorService } from './services/reward-calculator.service';
+import { JwtService } from './services/jwt.service';
+
+// Guards
+import { JwtAuthGuard } from '../shared/interfaces/jwt-auth.guard';
 
 /**
  * 인프라스트럭처 모듈
@@ -23,6 +28,14 @@ import { RewardCalculatorService } from './services/reward-calculator.service';
       UserTypeOrmEntity,
       // 나중에 다른 엔티티들 추가
     ]),
+    // JWT 모듈 설정
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'default-secret-key-for-development',
+      signOptions: { 
+        expiresIn: '7d', // 7일 유효기간
+        algorithm: 'HS256',
+      },
+    }),
   ],
   providers: [
     // Repository 구현체 등록 (의존성 역전)
@@ -69,6 +82,14 @@ import { RewardCalculatorService } from './services/reward-calculator.service';
       provide: 'IRewardCalculator',
       useClass: RewardCalculatorService,
     },
+    {
+      provide: 'IJwtService',
+      useClass: JwtService,
+    },
+    
+    // Guards 등록
+    JwtAuthGuard,
+    
     // 나중에 다른 서비스들 추가
   ],
   exports: [
@@ -78,6 +99,8 @@ import { RewardCalculatorService } from './services/reward-calculator.service';
     'IBadgeService',
     'INotificationService',
     'IRewardCalculator',
+    'IJwtService',
+    JwtAuthGuard,
   ],
 })
 export class InfrastructureModule {} 

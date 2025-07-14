@@ -1,0 +1,11 @@
+# Task ID: 15
+# Title: 배포 환경 설정
+# Status: pending
+# Dependencies: 14
+# Priority: medium
+# Description: Docker 컨테이너화 및 배포 환경 설정
+# Details:
+Dockerfile 작성, Docker Compose 설정, 환경 변수 관리, 배포 스크립트 작성
+
+# Test Strategy:
+Docker 컨테이너 빌드 및 배포 테스트

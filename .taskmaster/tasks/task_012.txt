@@ -1,0 +1,11 @@
+# Task ID: 12
+# Title: API 문서화 및 Swagger 설정
+# Status: pending
+# Dependencies: 7
+# Priority: medium
+# Description: Swagger를 이용한 API 문서 자동 생성 및 설정
+# Details:
+모든 API 엔드포인트에 대한 Swagger 문서 생성, DTO 스키마 정의
+
+# Test Strategy:
+Swagger UI에서 API 문서 확인 및 테스트
