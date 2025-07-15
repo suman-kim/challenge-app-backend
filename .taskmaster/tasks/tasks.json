@@ -95,7 +95,7 @@
         "id": 3,
         "title": "챌린지 시스템 구현",
         "description": "챌린지 생성, 조회, 참여, 탈퇴 API 구현",
-        "status": "pending",
+        "status": "in-progress",
         "priority": "high",
         "dependencies": [
           2
@@ -320,7 +320,7 @@
     ],
     "metadata": {
       "created": "2025-07-09T05:12:31.706Z",
-      "updated": "2025-07-11T09:04:03.850Z",
+      "updated": "2025-07-15T02:52:35.180Z",
       "description": "Tasks for master context"
     }
   },

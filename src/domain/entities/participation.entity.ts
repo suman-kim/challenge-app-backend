@@ -6,9 +6,9 @@ import { ParticipationStatus } from '../enums/participation-status.enum';
  */
 export class Participation {
   constructor(
-    public readonly id: string,
-    public readonly userId: string,
-    public readonly challengeId: string,
+    public readonly id: number,
+    public readonly userId: number,
+    public readonly challengeId: number,
     public readonly status: ParticipationStatus,
     public readonly joinedAt: Date,
     public readonly createdAt: Date,
@@ -19,8 +19,8 @@ export class Participation {
   ) {}
 
   static create(
-    userId: string,
-    challengeId: string,
+    userId: number,
+    challengeId: number,
   ): Participation {
     return new Participation(
       undefined,
